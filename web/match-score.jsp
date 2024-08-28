@@ -1,3 +1,4 @@
+<jsp:useBean id="matchScoreModel" scope="request" type="model.MatchScore"/>
 <%--
   Created by IntelliJ IDEA.
   User: Computer
@@ -34,26 +35,26 @@
             </thead>
             <tbody>
             <tr>
-                <th scope="row">${player1}</th>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
+                <th scope="row">${matchScoreModel.match.player1.name}</th>
+                <td>${matchScoreModel.player1Sets}</td>
+                <td>${matchScoreModel.player1Games}</td>
+                <td>${matchScoreModel.player1Points}</td>
             </tr>
             <tr>
-                <th scope="row">${player2}</th>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
+                <th scope="row">${matchScoreModel.match.player2.name}</th>
+                <td>${matchScoreModel.player2Sets}</td>
+                <td>${matchScoreModel.player2Games}</td>
+                <td>${matchScoreModel.player2Points}</td>
             </tr>
             </tbody>
         </table>
         <div class="container d-flex justify-content-between p-0 pt-4">
-            <form method="post" action="/match-score?uuid=${match_id}">
-                <input type="hidden" name="playerId" value="1">
+            <form method="post" action="${pageContext.request.contextPath}/match-score?uuid=${uuid}">
+                <input type="hidden" name="playerId" value="${matchScoreModel.match.player1.id}">
                 <button type="submit" class="btn btn-primary text-light fs-5 fw-bold">Player 1 wins point!</button>
             </form>
-            <form method="post" action="/match-score?uuid=${match_id}">
-                <input type="hidden" name="playerId" value="2">
+            <form method="post" action="${pageContext.request.contextPath}/match-score?uuid=${uuid}">
+                <input type="hidden" name="playerId" value="${matchScoreModel.match.player2.id}">
                 <button type="submit" class="btn btn-primary text-light fs-5 fw-bold">Player 2 wins point!</button>
             </form>
         </div>

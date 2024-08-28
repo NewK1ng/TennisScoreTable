@@ -13,14 +13,13 @@ import java.util.Optional;
 
 public class PlayerDAO {
 
-    @Transactional
     public Player create(String name) throws Exception {
 
         Player player = new Player(name);
 
-        try {
+        Session session = HibernateUtil.getCurrentSession();
 
-            Session session = HibernateUtil.getCurrentSession();
+        try {
 
             session.beginTransaction();
 
@@ -30,15 +29,16 @@ public class PlayerDAO {
 
             return player;
         } catch (Exception e) {
+            session.getTransaction().rollback();
             throw new Exception("Player with the name " + name + " already exists");
         }
     }
 
-    @Transactional
     public Optional<Player> read(String name) throws Exception {
 
+        Session session = HibernateUtil.getCurrentSession();
+
         try {
-            Session session = HibernateUtil.getCurrentSession();
 
             session.beginTransaction();
 
@@ -50,6 +50,7 @@ public class PlayerDAO {
 
             return Optional.ofNullable(player);
         } catch (Exception e) {
+            session.getTransaction().rollback();
             throw new Exception("Something went wrong while reading player " + name);
         }
     }

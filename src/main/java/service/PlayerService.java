@@ -14,7 +14,7 @@ public class PlayerService {
         Player player;
 
         try {
-            player = playerDAO.create(name);
+             player = playerDAO.create(name);
         } catch (Exception e) {
 
             try {
@@ -22,13 +22,10 @@ public class PlayerService {
 
                 if (optionalPlayer.isPresent()) {
                     player = optionalPlayer.get();
-                } else {
-                    throw new Exception("Player with name " + name + " was not found");
-                }
+                } else throw new Exception("Player already exists and could not be found.");
             } catch (Exception ex) {
-                throw new Exception(e.getMessage());
+                throw new Exception(ex.getMessage());
             }
-
         }
 
         return player;

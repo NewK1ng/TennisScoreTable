@@ -23,4 +23,5 @@ public class MatchScore {
     public MatchScore(Match match) {
         this.match = match;
     }
+
 }
