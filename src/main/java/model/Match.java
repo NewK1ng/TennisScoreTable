@@ -29,9 +29,8 @@ public class Match {
     @JoinColumn(name = "winner")
     private Player winner;
 
-    public Match(Player player1, Player player2, Player winner) {
+    public Match(Player player1, Player player2) {
         this.player1 = player1;
         this.player2 = player2;
-        this.winner = winner;
     }
 }

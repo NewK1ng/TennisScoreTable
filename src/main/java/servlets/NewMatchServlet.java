@@ -8,9 +8,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.ErrorResponse;
+import model.Match;
+import model.MatchScore;
 import model.Player;
+import service.OngoingMatchesService;
+import service.PlayerService;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @WebServlet(urlPatterns = "/new-match")
 public class NewMatchServlet extends HttpServlet {
@@ -25,30 +30,41 @@ public class NewMatchServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String player1 = req.getParameter("player1");
-        String player2 = req.getParameter("player2");
+        String player1Name = req.getParameter("player1");
+        String player2Name = req.getParameter("player2");
 
-        if (player1 == null || player1.isBlank()) {
+        if (player1Name == null || player1Name.isBlank()) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             mapper.writeValue(resp.getWriter(), new ErrorResponse(HttpServletResponse.SC_BAD_REQUEST,
                     "Wrong value for Player 1"));
             return;
         }
 
-        if (player2 == null || player2.isBlank()) {
+        if (player2Name == null || player2Name.isBlank()) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             mapper.writeValue(resp.getWriter(), new ErrorResponse(HttpServletResponse.SC_BAD_REQUEST,
                     "Wrong value for Player 2"));
             return;
         }
 
+        Player player1;
+        Player player2;
+
         try {
-            Player p1 = new PlayerDAO().create(player1);
+            player1 = new PlayerService().createPlayer(player1Name);
+            player2 = new PlayerService().createPlayer(player2Name);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            mapper.writeValue(resp.getWriter(), new ErrorResponse(HttpServletResponse.SC_NOT_FOUND,
+                    e.getMessage()));
+            return;
         }
 
+        Match match = new Match(player1, player2);
+        MatchScore matchScore = new MatchScore(match);
+        UUID uuid = OngoingMatchesService.addMatch(matchScore);
 
+        resp.sendRedirect("/match-score?uuid="+uuid);
     }
 
 

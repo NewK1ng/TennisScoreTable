@@ -7,10 +7,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 public class MatchScore {
 
-    private Match match = new Match();
+    private Match match;
 
     private int player1Sets;
     private int player2Sets;
@@ -21,4 +20,7 @@ public class MatchScore {
     private int player1Points;
     private int player2Points;
 
+    public MatchScore(Match match) {
+        this.match = match;
+    }
 }
