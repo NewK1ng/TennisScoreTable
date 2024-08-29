@@ -2,6 +2,7 @@ package service;
 
 import lombok.Getter;
 import lombok.Setter;
+import model.Match;
 import model.MatchScore;
 
 import java.util.HashMap;
@@ -12,18 +13,18 @@ import java.util.concurrent.ConcurrentHashMap;
 @Setter
 public class OngoingMatchesService {
 
-    private static final ConcurrentHashMap<UUID, MatchScore> ongoingMatches = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<UUID, Match> ongoingMatches = new ConcurrentHashMap<>();
 
     private OngoingMatchesService() {
     }
 
-    public static UUID addMatch(MatchScore matchScore) {
+    public static UUID addMatch(Match match) {
         UUID uuid = UUID.randomUUID();
-        ongoingMatches.put(uuid, matchScore);
+        ongoingMatches.put(uuid, match);
         return uuid;
     }
 
-    public static MatchScore getMatch(UUID id) {
+    public static Match getMatch(UUID id) {
         return ongoingMatches.get(id);
     }
 

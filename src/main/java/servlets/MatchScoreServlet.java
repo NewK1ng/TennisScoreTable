@@ -6,7 +6,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.MatchScore;
+import model.Match;
+import service.MatchScoreCalculationService;
 import service.OngoingMatchesService;
 
 import java.io.IOException;
@@ -19,11 +20,10 @@ public class MatchScoreServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         UUID uuid = UUID.fromString(req.getParameter("uuid"));
-        MatchScore matchScore = OngoingMatchesService.getMatch(uuid);
+        Match match = OngoingMatchesService.getMatch(uuid);
 
         req.setAttribute("uuid", uuid);
-        req.setAttribute("matchScoreModel", matchScore);
-
+        req.setAttribute("match", match);
 
         RequestDispatcher dispatcher = req.getRequestDispatcher("match-score.jsp");
         dispatcher.forward(req, resp);
@@ -32,21 +32,19 @@ public class MatchScoreServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        long playerId = Long.parseLong(req.getParameter("playerId"));
+        int playerIndex = Integer.parseInt(req.getParameter("playerIndex"));
 
-        System.out.println("Player " + playerId + " won point!");
+        System.out.println("Player " + playerIndex + " won point!");
 
         UUID uuid = UUID.fromString(req.getParameter("uuid"));
-        MatchScore matchScore = OngoingMatchesService.getMatch(uuid);
+        Match match = OngoingMatchesService.getMatch(uuid);
 
-        if (playerId == matchScore.getMatch().getPlayer1().getId()) {
-            matchScore.setPlayer1Points(matchScore.getPlayer1Points() + 10);
-        } else {
-            matchScore.setPlayer2Points(matchScore.getPlayer2Points() + 10);
-        }
+        MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationService();
+
+        matchScoreCalculationService.calculateMatchScore(playerIndex, match);
 
         req.setAttribute("uuid", uuid);
-        req.setAttribute("matchScoreModel", matchScore);
+        req.setAttribute("match", match);
 
         RequestDispatcher dispatcher = req.getRequestDispatcher("match-score.jsp");
         dispatcher.forward(req, resp);

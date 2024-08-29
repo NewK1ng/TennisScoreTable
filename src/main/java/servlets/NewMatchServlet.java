@@ -61,8 +61,7 @@ public class NewMatchServlet extends HttpServlet {
         }
 
         Match match = new Match(player1, player2);
-        MatchScore matchScore = new MatchScore(match);
-        UUID uuid = OngoingMatchesService.addMatch(matchScore);
+        UUID uuid = OngoingMatchesService.addMatch(match);
 
         resp.sendRedirect("/match-score?uuid="+uuid);
     }

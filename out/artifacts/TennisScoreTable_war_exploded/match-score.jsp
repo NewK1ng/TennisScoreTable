@@ -1,3 +1,4 @@
+<jsp:useBean id="match" scope="request" type="model.Match"/>
 <%--
   Created by IntelliJ IDEA.
   User: Computer
@@ -34,26 +35,26 @@
             </thead>
             <tbody>
             <tr>
-                <th scope="row">${player1}</th>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
+                <th scope="row">${match.player1.name}</th>
+                <td>${match.matchScore.getPlayerSets(1)}</td>
+                <td>${match.matchScore.getPlayerGames(1)}</td>
+                <td>${match.matchScore.getPlayerPoints(1)}</td>
             </tr>
             <tr>
-                <th scope="row">${player2}</th>
-                <td>0</td>
-                <td>0</td>
-                <td>0</td>
+                <th scope="row">${match.player2.name}</th>
+                <td>${match.matchScore.getPlayerSets(2)}</td>
+                <td>${match.matchScore.getPlayerGames(2)}</td>
+                <td>${match.matchScore.getPlayerPoints(2)}</td>
             </tr>
             </tbody>
         </table>
         <div class="container d-flex justify-content-between p-0 pt-4">
-            <form method="post" action="/match-score?uuid=${match_id}">
-                <input type="hidden" name="playerId" value="1">
+            <form method="post" action="${pageContext.request.contextPath}/match-score?uuid=${uuid}">
+                <input type="hidden" name="playerIndex" value="1">
                 <button type="submit" class="btn btn-primary text-light fs-5 fw-bold">Player 1 wins point!</button>
             </form>
-            <form method="post" action="/match-score?uuid=${match_id}">
-                <input type="hidden" name="playerId" value="2">
+            <form method="post" action="${pageContext.request.contextPath}/match-score?uuid=${uuid}">
+                <input type="hidden" name="playerIndex" value="2">
                 <button type="submit" class="btn btn-primary text-light fs-5 fw-bold">Player 2 wins point!</button>
             </form>
         </div>
