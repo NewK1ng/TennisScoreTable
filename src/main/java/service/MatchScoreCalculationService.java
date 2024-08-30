@@ -1,24 +1,31 @@
 package service;
 
-import model.Match;
 import model.MatchScore;
 
 public class MatchScoreCalculationService {
 
+    private final MatchScore matchScore;
+    private final int playerIndex;
 
-    public void calculateMatchScore(int playerIndex, Match match) {
+    public MatchScoreCalculationService(int playerIndex, MatchScore matchScore) {
+        this.matchScore = matchScore;
+        this.playerIndex = playerIndex;
+    }
 
-        MatchScore matchScore = match.getMatchScore();
+    public void calculateMatchScore() {
 
-        addPoint(playerIndex, matchScore);
+        if (!matchScore.isTieBrake()) {
+            calculateRegularMatchScore();
+        } else {
+            calculateTieBreakScore();
+        }
 
     }
 
-    private void addPoint(int playerIndex, MatchScore matchScore) {
+    private void calculateRegularMatchScore() {
 
         if (!matchScore.isEqualPoints()) {
             switch (matchScore.getPlayerPoints(playerIndex)) {
-
                 case 0, 15:
                     matchScore.addPlayerPoints(playerIndex, 15);
                     break;
@@ -26,43 +33,97 @@ public class MatchScoreCalculationService {
                     matchScore.addPlayerPoints(playerIndex, 10);
                     break;
                 case 40:
-                    if (isPointsEqual(matchScore)) {
-                        matchScore.setEqualPoints(true);
-                        matchScore.addPlayerPoints(playerIndex, 1);
-                    } else {
-                        matchScore.resetPoints();
-                        addGames(playerIndex, matchScore);
-                    }
+                    fortyPointsCalculation();
                     break;
             }
         } else {
-            matchScore.addPlayerPoints(playerIndex, 1);
-            if (isTwoPointsAdvantage(matchScore)) {
-                matchScore.setEqualPoints(false);
-                matchScore.resetPoints();
-                addGames(playerIndex, matchScore);
-            }
+            equalPointsCalculation();
         }
     }
 
-    private void addGames(int playerIndex, MatchScore matchScore) {
-        matchScore.addPlayerGames(playerIndex);
+    private void fortyPointsCalculation() {
+        int player1Points = matchScore.getPlayerPoints(1);
+        int player2Points = matchScore.getPlayerPoints(2);
+
+        if (player1Points == player2Points) {
+            matchScore.setEqualPoints(true);
+            equalPointsCalculation();
+        } else {
+            addGame();
+        }
     }
 
-    private boolean isPointsEqual(MatchScore matchScore) {
-        return matchScore.getPlayerPoints(1) == matchScore.getPlayerPoints(2);
+    private void equalPointsCalculation() {
+        matchScore.addPlayerPoints(playerIndex, 1);
+
+        int player1Points = matchScore.getPlayerPoints(1);
+        int player2Points = matchScore.getPlayerPoints(2);
+
+        if (calculateAdvantage(player1Points, player2Points) > 1) {
+            matchScore.setEqualPoints(false);
+            addGame();
+        }
     }
 
-    private boolean isTwoPointsAdvantage(MatchScore matchScore) {
-        int absoluteDifference = Math.abs(matchScore.getPlayerPoints(1) - matchScore.getPlayerPoints(2));
-        return absoluteDifference == 2;
+    private int calculateAdvantage(int firstNum, int secondNum) {
+        return Math.abs(firstNum - secondNum);
     }
 
     private void addGame() {
 
+        matchScore.resetPoints();
+        matchScore.addPlayerGames(playerIndex);
+
+        switch (matchScore.getPlayerGames(playerIndex)) {
+            case 6:
+
+                int player1Games = matchScore.getPlayerGames(1);
+                int player2Games = matchScore.getPlayerGames(2);
+
+                if (calculateAdvantage(player1Games, player2Games) > 1) {
+                    addSet();
+                } else if (player1Games == player2Games) {
+                    matchScore.resetPoints();
+                    matchScore.setTieBrake(true);
+                }
+                break;
+            case 7:
+                addSet();
+
+        }
+    }
+
+    private void calculateTieBreakScore() {
+        matchScore.addPlayerPoints(playerIndex, 1);
+
+        if (matchScore.getPlayerPoints(playerIndex) == 7) {
+            checkTieBreakWinner();
+        } else if (matchScore.getPlayerPoints(playerIndex) > 7) {
+            checkTieBreakWinner();
+        }
+    }
+
+    private void checkTieBreakWinner() {
+
+        int player1Points = matchScore.getPlayerPoints(1);
+        int player2Points = matchScore.getPlayerPoints(2);
+
+        if (calculateAdvantage(player1Points, player2Points) > 1) {
+            matchScore.setTieBrake(false);
+            addSet();
+        }
+
     }
 
     private void addSet() {
+
+        matchScore.resetPoints();
+        matchScore.resetGames();
+        matchScore.addPlayerSets(playerIndex);
+
+        if(matchScore.getPlayerSets(playerIndex) > 1) {
+            matchScore.setMatchFinished(true);
+        }
 
     }
 
