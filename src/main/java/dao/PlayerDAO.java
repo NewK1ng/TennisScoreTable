@@ -1,11 +1,7 @@
 package dao;
 
-import jakarta.transaction.Transactional;
-import model.Match;
 import model.Player;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
 import util.HibernateUtil;
 
 import java.util.Optional;
@@ -13,13 +9,9 @@ import java.util.Optional;
 
 public class PlayerDAO {
 
-    public Player create(String name) throws Exception {
+    public void save(Player player) throws Exception {
 
-        Player player = new Player(name);
-
-        Session session = HibernateUtil.getCurrentSession();
-
-        try {
+        try (Session session = HibernateUtil.getCurrentSession();){
 
             session.beginTransaction();
 
@@ -27,18 +19,14 @@ public class PlayerDAO {
 
             session.getTransaction().commit();
 
-            return player;
         } catch (Exception e) {
-            session.getTransaction().rollback();
-            throw new Exception("Player with the name " + name + " already exists");
+            throw new Exception("Player with the name " + player.getName() + " already exists");
         }
     }
 
-    public Optional<Player> read(String name) throws Exception {
+    public Optional<Player> findByName(String name) throws Exception {
 
-        Session session = HibernateUtil.getCurrentSession();
-
-        try {
+        try (Session session = HibernateUtil.getCurrentSession()) {
 
             session.beginTransaction();
 
@@ -50,8 +38,7 @@ public class PlayerDAO {
 
             return Optional.ofNullable(player);
         } catch (Exception e) {
-            session.getTransaction().rollback();
-            throw new Exception("Something went wrong while reading player " + name);
+            throw new Exception("Something went wrong while finding player " + name);
         }
     }
 

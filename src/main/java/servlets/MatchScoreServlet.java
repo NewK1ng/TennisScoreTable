@@ -34,14 +34,17 @@ public class MatchScoreServlet extends HttpServlet {
 
         int playerIndex = Integer.parseInt(req.getParameter("playerIndex"));
 
-        System.out.println("Player " + playerIndex + " won point!");
-
         UUID uuid = UUID.fromString(req.getParameter("uuid"));
         Match match = OngoingMatchesService.getMatch(uuid);
 
-        MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationService();
+        MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationService(playerIndex, match.getMatchScore());
 
-        matchScoreCalculationService.calculateMatchScore(playerIndex, match);
+        matchScoreCalculationService.calculateMatchScore();
+
+        if(match.getMatchScore().isMatchFinished()) {
+            OngoingMatchesService.removeMatch(uuid);
+
+        }
 
         req.setAttribute("uuid", uuid);
         req.setAttribute("match", match);

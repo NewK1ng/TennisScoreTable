@@ -28,4 +28,7 @@ public class OngoingMatchesService {
         return ongoingMatches.get(id);
     }
 
+    public static void removeMatch(UUID id) {
+        ongoingMatches.remove(id);
+    }
 }

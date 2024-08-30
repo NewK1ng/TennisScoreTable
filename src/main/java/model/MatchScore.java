@@ -7,6 +7,8 @@ public class MatchScore {
     private int[] games;
     private int[] sets;
     private boolean isEqualPoints;
+    private boolean isTieBrake;
+    private boolean isMatchFinished;
 
 
     public MatchScore() {
@@ -18,6 +20,11 @@ public class MatchScore {
     public void resetPoints() {
         points[0] = 0;
         points[1] = 0;
+    }
+
+    public void resetGames() {
+        games[0] = 0;
+        games[1] = 0;
     }
 
     public int getPlayerPoints(int playerIndex) {
@@ -50,5 +57,21 @@ public class MatchScore {
 
     public void setEqualPoints(boolean equalPoints) {
         isEqualPoints = equalPoints;
+    }
+
+    public boolean isTieBrake() {
+        return isTieBrake;
+    }
+
+    public void setTieBrake(boolean tieBrake) {
+        isTieBrake = tieBrake;
+    }
+
+    public boolean isMatchFinished() {
+        return isMatchFinished;
+    }
+
+    public void setMatchFinished(boolean matchFinished) {
+        isMatchFinished = matchFinished;
     }
 }
