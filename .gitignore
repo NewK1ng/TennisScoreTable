@@ -11,6 +11,7 @@ target/
 *.iws
 *.iml
 *.ipr
+/out
 
 ### Eclipse ###
 .apt_generated
@@ -36,8 +37,4 @@ build/
 
 ### Mac OS ###
 .DS_Store
-/out/artifacts/TennisScoreTable_war_exploded/WEB-INF/lib/istack-commons-runtime-4.1.1.jar
-/out/artifacts/TennisScoreTable_war_exploded/WEB-INF/classes/hibernate.cfg.xml
-/out/artifacts/TennisScoreTable_war_exploded/WEB-INF/lib/jakarta.persistence-api-3.1.0.jar
-/out/artifacts/TennisScoreTable_war_exploded/WEB-INF/lib/
 src/main/resources/hibernate.cfg.xml

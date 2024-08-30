@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Match;
+import service.FinishedMatchesService;
 import service.MatchScoreCalculationService;
 import service.OngoingMatchesService;
 
@@ -38,20 +39,26 @@ public class MatchScoreServlet extends HttpServlet {
         Match match = OngoingMatchesService.getMatch(uuid);
 
         MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationService(playerIndex, match.getMatchScore());
-
         matchScoreCalculationService.calculateMatchScore();
-
-        if(match.getMatchScore().isMatchFinished()) {
-            OngoingMatchesService.removeMatch(uuid);
-
-        }
 
         req.setAttribute("uuid", uuid);
         req.setAttribute("match", match);
 
-        RequestDispatcher dispatcher = req.getRequestDispatcher("match-score.jsp");
-        dispatcher.forward(req, resp);
+        if(match.getMatchScore().isMatchFinished()) {
 
+            match.setWinner(matchScoreCalculationService.getWinner(match));
+            OngoingMatchesService.removeMatch(uuid);
+
+            try {
+                FinishedMatchesService finishedMatchesService = new FinishedMatchesService();
+                finishedMatchesService.save(match);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            req.getRequestDispatcher("finished-score.jsp").forward(req, resp);
+        } else {
+            req.getRequestDispatcher("match-score.jsp").forward(req,resp);
+        }
 
     }
 }

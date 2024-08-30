@@ -14,9 +14,6 @@ public class Match {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Version
-    private Long version;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "player1")
     private Player player1;

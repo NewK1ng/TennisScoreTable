@@ -1,6 +1,8 @@
 package service;
 
+import model.Match;
 import model.MatchScore;
+import model.Player;
 
 public class MatchScoreCalculationService {
 
@@ -121,10 +123,19 @@ public class MatchScoreCalculationService {
         matchScore.resetGames();
         matchScore.addPlayerSets(playerIndex);
 
-        if(matchScore.getPlayerSets(playerIndex) > 1) {
+        if (matchScore.getPlayerSets(playerIndex) > 1) {
+
             matchScore.setMatchFinished(true);
         }
-
     }
+
+    public Player getWinner(Match match) {
+        if (playerIndex == 1) {
+            return match.getPlayer1();
+        } else {
+            return match.getPlayer2();
+        }
+    }
+
 
 }

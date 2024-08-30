@@ -11,7 +11,7 @@ public class PlayerDAO {
 
     public void save(Player player) throws Exception {
 
-        try (Session session = HibernateUtil.getCurrentSession();){
+        try (Session session = HibernateUtil.getCurrentSession()){
 
             session.beginTransaction();
 

@@ -10,7 +10,6 @@ public class MatchScore {
     private boolean isTieBrake;
     private boolean isMatchFinished;
 
-
     public MatchScore() {
         points = new int[] {0,0};
         games = new int[] {0,0};
