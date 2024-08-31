@@ -15,17 +15,14 @@ public class MatchScoreCalculationService {
     }
 
     public void calculateMatchScore() {
-
         if (!matchScore.isTieBrake()) {
             calculateRegularMatchScore();
         } else {
             calculateTieBreakScore();
         }
-
     }
 
     private void calculateRegularMatchScore() {
-
         if (!matchScore.isEqualPoints()) {
             switch (matchScore.getPlayerPoints(playerIndex)) {
                 case 0, 15:
@@ -72,7 +69,6 @@ public class MatchScoreCalculationService {
     }
 
     private void addGame() {
-
         matchScore.resetPoints();
         matchScore.addPlayerGames(playerIndex);
 
