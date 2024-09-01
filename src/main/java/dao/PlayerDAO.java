@@ -12,13 +12,11 @@ public class PlayerDAO {
     public void save(Player player) throws Exception {
 
         try (Session session = HibernateUtil.getCurrentSession()){
-
             session.beginTransaction();
 
             session.persist(player);
 
             session.getTransaction().commit();
-
         } catch (Exception e) {
             throw new Exception("Player with the name " + player.getName() + " already exists");
         }
@@ -27,7 +25,6 @@ public class PlayerDAO {
     public Optional<Player> findByName(String name) throws Exception {
 
         try (Session session = HibernateUtil.getCurrentSession()) {
-
             session.beginTransaction();
 
             Player player = session.createQuery("from Player where name = :name", Player.class)

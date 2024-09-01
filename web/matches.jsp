@@ -1,5 +1,5 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<jsp:useBean id="matches" scope="request" type="java.util.List"/>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<jsp:useBean id="finishedMatchesPage" scope="request" type="model.FinishedMatchesPage"/>
 <%--
   Created by IntelliJ IDEA.
   User: Computer
@@ -47,7 +47,7 @@
         </tr>
         </thead>
         <tbody>
-        <c:forEach items="${matches}" var="match">
+        <c:forEach items="${finishedMatchesPage.matchesList}" var="match">
         <tr>
           <th scope="row">${match.id}</th>
           <td>${match.player1.name}</td>
