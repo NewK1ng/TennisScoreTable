@@ -41,7 +41,11 @@ public class MatchDAO {
 
             session.beginTransaction();
 
-            List<Match> matchesList = session.createQuery("from Match", Match.class)
+            List<Match> matchesList = session.createQuery("select m from Match m" +
+                            " join fetch m.player1 " +
+                            "join fetch m.player2 " +
+                            "join fetch m.winner " +
+                            "order by m.id asc", Match.class)
                     .setFirstResult(offset)
                     .setMaxResults(limit)
                     .getResultList();

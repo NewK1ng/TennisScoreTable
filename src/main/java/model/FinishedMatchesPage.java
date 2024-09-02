@@ -9,13 +9,15 @@ public class FinishedMatchesPage {
     private final Long totalPages;
     private final int pageNumber;
     private final int pageSize;
+    private final int pageElementStartIndex;
 
-    public FinishedMatchesPage(List<Match> matchesList, Long matchesCount, int pageNumber, Long totalPages, int pageSize) {
+    public FinishedMatchesPage(List<Match> matchesList, Long matchesCount, int pageNumber, Long totalPages, int pageSize, int pageElementStartIndex) {
         this.matchesList = matchesList;
         this.numberOfMatches = matchesCount;
         this.pageNumber = pageNumber;
         this.totalPages = totalPages;
         this.pageSize = pageSize;
+        this.pageElementStartIndex = pageElementStartIndex;
     }
 
     public List<Match> getMatchesList() {
@@ -36,5 +38,9 @@ public class FinishedMatchesPage {
 
     public int getPageSize() {
         return pageSize;
+    }
+
+    public int getPageElementStartIndex() {
+        return pageElementStartIndex;
     }
 }

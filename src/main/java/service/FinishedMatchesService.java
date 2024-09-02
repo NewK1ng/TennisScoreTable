@@ -19,10 +19,11 @@ public class FinishedMatchesService {
         int offset = (pageNumber - 1) * pageSize;
         long numberOfMatches = matchDAO.findNumberOfMatches();
         long totalPages = (numberOfMatches + pageSize - 1) / pageSize;
+        int pageElementStartIndex = (pageSize*pageNumber)-pageSize;
 
         List<Match> matchList = matchDAO.findAllPaginated(offset, pageSize);
 
-        return new FinishedMatchesPage(matchList, numberOfMatches, pageNumber, totalPages, pageSize);
+        return new FinishedMatchesPage(matchList, numberOfMatches, pageNumber, totalPages, pageSize,pageElementStartIndex);
     }
 
 
