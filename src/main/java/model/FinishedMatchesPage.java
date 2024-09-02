@@ -10,14 +10,16 @@ public class FinishedMatchesPage {
     private final int pageNumber;
     private final int pageSize;
     private final int pageElementStartIndex;
+    private final String filterPlayerName;
 
-    public FinishedMatchesPage(List<Match> matchesList, Long matchesCount, int pageNumber, Long totalPages, int pageSize, int pageElementStartIndex) {
+    public FinishedMatchesPage(List<Match> matchesList, Long matchesCount, int pageNumber, Long totalPages, int pageSize, int pageElementStartIndex, String filterPlayerName) {
         this.matchesList = matchesList;
         this.numberOfMatches = matchesCount;
         this.pageNumber = pageNumber;
         this.totalPages = totalPages;
         this.pageSize = pageSize;
         this.pageElementStartIndex = pageElementStartIndex;
+        this.filterPlayerName = filterPlayerName;
     }
 
     public List<Match> getMatchesList() {
@@ -42,5 +44,9 @@ public class FinishedMatchesPage {
 
     public int getPageElementStartIndex() {
         return pageElementStartIndex;
+    }
+
+    public String getFilterPlayerName() {
+        return filterPlayerName;
     }
 }

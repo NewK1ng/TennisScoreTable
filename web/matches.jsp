@@ -42,10 +42,10 @@
 
         <div class="container m-0 p-2 d-flex justify-content-center">
 
-            <label for="inputPlayer2" class="text-light fs-2 fw-bold">Name:</label>
+            <label for="filter_by_player_name" class="text-light fs-2 fw-bold">Name:</label>
 
-            <form class="d-flex align-items-center justify-content-center w-100" method="get" action="/new-match">
-                <input type="text" class="form-control m-2" id="inputPlayer2" name="player2">
+            <form class="d-flex align-items-center justify-content-center w-100" method="get" action="${pageContext.request.contextPath}/matches">
+                <input type="text" class="form-control m-2" id="filter_by_player_name" name="filter_by_player_name" value="${finishedMatchesPage.filterPlayerName}">
                 <button type="submit" class="btn btn-primary text-light fw-bold w-25">Search</button>
             </form>
 
@@ -73,10 +73,16 @@
             </table>
         </div>
 
+        <c:if test="${not empty finishedMatchesPage.filterPlayerName}">
+            <c:set var="playerFilter" value="&filter_by_player_name=${finishedMatchesPage.filterPlayerName}"/>
+        </c:if>
+
+        <c:set var="prevUrl" value="${pageContext.request.contextPath}/matches?page=${finishedMatchesPage.pageNumber-1}${playerFilter}"/>
+        <c:set var="nextUrl" value="${pageContext.request.contextPath}/matches?page=${finishedMatchesPage.pageNumber+1}${playerFilter}"/>
+
         <c:if test="${finishedMatchesPage.numberOfMatches > finishedMatchesPage.pageSize}">
             <div class="container d-flex justify-content-center pt-3 align-items-center w-25 p-0">
-                <a href="${pageContext.request.contextPath}/matches?page=${finishedMatchesPage.pageNumber-1}"
-                   class=" btn btn-primary text-light fw-bold w-50
+                <a href="${prevUrl}" class=" btn btn-primary text-light fw-bold w-50
                 <c:if test="${finishedMatchesPage.pageNumber == 1}">disabled</c:if>">
                     Prev
                 </a>
@@ -84,8 +90,7 @@
                 <a class="btn btn-primary fw-bold disabled mx-2"
                    style="opacity: 1">${finishedMatchesPage.pageNumber}</a>
 
-                <a href="${pageContext.request.contextPath}/matches?page=${finishedMatchesPage.pageNumber+1}"
-                   class=" btn btn-primary text-light fw-bold w-50
+                <a href="${nextUrl}" class=" btn btn-primary text-light fw-bold w-50
                 <c:if test="${finishedMatchesPage.pageNumber == finishedMatchesPage.totalPages}">disabled</c:if>">
                     Next
                 </a>

@@ -14,16 +14,25 @@ public class FinishedMatchesService {
         matchDAO.save(match);
     }
 
-    public FinishedMatchesPage getFinishedMatches(int pageNumber, int pageSize) throws Exception {
+    public FinishedMatchesPage getFinishedMatches(int pageNumber, int pageSize, String playerName) throws Exception {
 
         int offset = (pageNumber - 1) * pageSize;
-        long numberOfMatches = matchDAO.findNumberOfMatches();
-        long totalPages = (numberOfMatches + pageSize - 1) / pageSize;
-        int pageElementStartIndex = (pageSize*pageNumber)-pageSize;
+        int pageElementStartIndex = (pageSize * pageNumber) - pageSize;
+        long numberOfMatches;
+        long totalPages;
+        List<Match> matchList;
 
-        List<Match> matchList = matchDAO.findAllPaginated(offset, pageSize);
+        if (playerName == null) {
+            numberOfMatches = matchDAO.findNumberOfMatches();
+            totalPages = (numberOfMatches + pageSize - 1) / pageSize;
+            matchList = matchDAO.findAllPaginated(offset, pageSize);
+        } else {
+            numberOfMatches = matchDAO.findNumberOfMatchesByPlayerName(playerName);
+            totalPages = (numberOfMatches + pageSize - 1) / pageSize;
+            matchList = matchDAO.findByPlayerNamePaginated(offset, pageSize, playerName);
+        }
 
-        return new FinishedMatchesPage(matchList, numberOfMatches, pageNumber, totalPages, pageSize,pageElementStartIndex);
+        return new FinishedMatchesPage(matchList, numberOfMatches, pageNumber, totalPages, pageSize, pageElementStartIndex, playerName);
     }
 
 

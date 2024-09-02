@@ -29,7 +29,24 @@ public class MatchDAO {
 
             session.getTransaction().commit();
 
-            return  numberOfMatches;
+            return numberOfMatches;
+        } catch (Exception e) {
+            throw new Exception("Something went wrong when getting matches quantity");
+        }
+    }
+
+    public long findNumberOfMatchesByPlayerName(String name) throws Exception {
+        try (Session session = HibernateUtil.getCurrentSession()) {
+            session.beginTransaction();
+
+            long numberOfMatches = session.createQuery("select count(id) from Match " +
+                            "where player1.name ilike :name or player2.name ilike :name", Long.class)
+                    .setParameter("name", "%" + name + "%")
+                    .uniqueResult();
+
+            session.getTransaction().commit();
+
+            return numberOfMatches;
         } catch (Exception e) {
             throw new Exception("Something went wrong when getting matches quantity");
         }
@@ -57,6 +74,32 @@ public class MatchDAO {
             throw new Exception("Something went wrong when getting matches");
 
         }
+    }
+
+    public List<Match> findByPlayerNamePaginated(int offset, int limit, String name) throws Exception {
+
+        try (Session session = HibernateUtil.getCurrentSession()) {
+
+            session.beginTransaction();
+
+            List<Match> matchesList = session.createQuery("select m from Match m" +
+                            " join fetch m.player1 " +
+                            "join fetch m.player2 " +
+                            "join fetch m.winner " +
+                            "where m.player1.name ilike :name or m.player2.name ilike :name", Match.class)
+                    .setParameter("name", "%" + name + "%")
+                    .setFirstResult(offset)
+                    .setMaxResults(limit)
+                    .getResultList();
+
+            session.getTransaction().commit();
+
+            return matchesList;
+        } catch (Exception e) {
+            throw new Exception("Something went wrong when getting matches");
+
+        }
+
     }
 
 

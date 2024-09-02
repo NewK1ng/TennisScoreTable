@@ -20,31 +20,35 @@ public class MatchesServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         String pageNumberParam = req.getParameter("page");
+        String playerNameParam = req.getParameter("filter_by_player_name");
 
-        int pageNumber;
+        int pageNumber = 1;
+        String playerName = null;
 
         try {
             if (pageNumberParam != null) {
                 pageNumber = Integer.parseInt(pageNumberParam);
-            } else {
-                pageNumber = 1;
             }
         } catch (NumberFormatException e) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid page number");
             return;
         }
 
+        if (playerNameParam != null && !playerNameParam.isBlank()) {
+            playerName = playerNameParam;
+        }
+
         FinishedMatchesPage finishedMatchesPage;
 
         try {
-            finishedMatchesPage = finishedMatchesService.getFinishedMatches(pageNumber, NUMBER_OF_ELEMENTS_PER_PAGE);
+            finishedMatchesPage = finishedMatchesService.getFinishedMatches(pageNumber, NUMBER_OF_ELEMENTS_PER_PAGE, playerName);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
         req.setAttribute("finishedMatchesPage", finishedMatchesPage);
 
-        req.getRequestDispatcher("/matches.jsp").forward(req, resp);
+        getServletContext().getRequestDispatcher("/matches.jsp").forward(req, resp);
 
     }
 
