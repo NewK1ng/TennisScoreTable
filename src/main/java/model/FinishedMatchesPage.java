@@ -49,4 +49,6 @@ public class FinishedMatchesPage {
     public String getFilterPlayerName() {
         return filterPlayerName;
     }
+
+
 }

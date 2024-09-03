@@ -17,6 +17,25 @@
 
 <body>
 
+<nav class="navbar navbar-dark bg-dark navbar-expand-lg">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="${pageContext.request.contextPath}/index.jsp">HOME</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link" href="${pageContext.request.contextPath}/new-match.jsp">New match</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="${pageContext.request.contextPath}/matches">Matches</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
 <div class="container-fluid bg-secondary min-vh-100 d-flex align-items-center justify-content-center">
 
   <div class="container bg-dark border border-white border-2 d-flex p-4 justify-content-center" style="width: 30%">

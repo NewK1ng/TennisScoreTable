@@ -1,6 +1,5 @@
 package dao;
 
-import model.FinishedMatchesPage;
 import model.Match;
 import org.hibernate.Session;
 import util.HibernateUtil;
@@ -53,9 +52,7 @@ public class MatchDAO {
     }
 
     public List<Match> findAllPaginated(int offset, int limit) throws Exception {
-
         try (Session session = HibernateUtil.getCurrentSession()) {
-
             session.beginTransaction();
 
             List<Match> matchesList = session.createQuery("select m from Match m" +
@@ -72,14 +69,11 @@ public class MatchDAO {
             return matchesList;
         } catch (Exception e) {
             throw new Exception("Something went wrong when getting matches");
-
         }
     }
 
     public List<Match> findByPlayerNamePaginated(int offset, int limit, String name) throws Exception {
-
         try (Session session = HibernateUtil.getCurrentSession()) {
-
             session.beginTransaction();
 
             List<Match> matchesList = session.createQuery("select m from Match m" +
@@ -97,9 +91,7 @@ public class MatchDAO {
             return matchesList;
         } catch (Exception e) {
             throw new Exception("Something went wrong when getting matches");
-
         }
-
     }
 
 
