@@ -1,20 +1,30 @@
 package servlets;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import model.ErrorResponse;
 import model.FinishedMatchesPage;
 import service.FinishedMatchesService;
+import util.ErrorHandler;
 
 import java.io.IOException;
 
 @WebServlet(urlPatterns = "/matches")
 public class MatchesServlet extends HttpServlet {
 
-    private final FinishedMatchesService finishedMatchesService = new FinishedMatchesService();
+    private ErrorHandler errorHandler;
     private final static int NUMBER_OF_ELEMENTS_PER_PAGE = 5;
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        ObjectMapper mapper = new ObjectMapper();
+        errorHandler = new ErrorHandler(mapper);
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -26,11 +36,11 @@ public class MatchesServlet extends HttpServlet {
         String playerName = null;
 
         try {
-            if (pageNumberParam != null) {
+            if (pageNumberParam != null && !pageNumberParam.isBlank()) {
                 pageNumber = Integer.parseInt(pageNumberParam);
             }
-        } catch (NumberFormatException e) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid page number");
+        } catch (Exception e) {
+            errorHandler.handleError(resp, new ErrorResponse(HttpServletResponse.SC_BAD_REQUEST, "Wrong value for page number"));
             return;
         }
 
@@ -41,14 +51,16 @@ public class MatchesServlet extends HttpServlet {
         FinishedMatchesPage finishedMatchesPage;
 
         try {
+            FinishedMatchesService finishedMatchesService = new FinishedMatchesService();
             finishedMatchesPage = finishedMatchesService.getFinishedMatches(pageNumber, NUMBER_OF_ELEMENTS_PER_PAGE, playerName);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            errorHandler.handleError(resp, new ErrorResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage()));
+            return;
         }
 
         req.setAttribute("finishedMatchesPage", finishedMatchesPage);
 
-        getServletContext().getRequestDispatcher("/matches.jsp").forward(req, resp);
+        req.getRequestDispatcher("/matches.jsp").forward(req, resp);
 
     }
 

@@ -10,7 +10,6 @@ import java.util.Optional;
 public class PlayerDAO {
 
     public void save(Player player) throws Exception {
-
         try (Session session = HibernateUtil.getCurrentSession()){
             session.beginTransaction();
 
@@ -23,7 +22,6 @@ public class PlayerDAO {
     }
 
     public Optional<Player> findByName(String name) throws Exception {
-
         try (Session session = HibernateUtil.getCurrentSession()) {
             session.beginTransaction();
 
@@ -38,6 +36,4 @@ public class PlayerDAO {
             throw new Exception("Something went wrong while finding player " + name);
         }
     }
-
-
 }

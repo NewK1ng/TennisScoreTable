@@ -125,11 +125,20 @@ public class MatchScoreCalculationService {
         }
     }
 
-    public Player getWinner(Match match) {
+    private void setWinner(Match match) {
         if (playerIndex == 1) {
-            return match.getPlayer1();
+            match.setWinner(match.getPlayer1());
         } else {
-            return match.getPlayer2();
+            match.setWinner(match.getPlayer2());
+        }
+    }
+
+    public boolean isMatchFinished(Match match) {
+        if (matchScore.isMatchFinished()) {
+            setWinner(match);
+            return true;
+        } else {
+            return false;
         }
     }
 

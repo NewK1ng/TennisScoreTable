@@ -18,12 +18,12 @@ public class NewMatchService {
         Optional<Player> playerOneOpt = playerDAO.findByName(playerOneName);
         Optional<Player> playerTwoOpt = playerDAO.findByName(playerTwoName);
 
-       if (playerOneOpt.isPresent()) {
-           playerOne = playerOneOpt.get();
-       } else {
-           playerOne = new Player(playerOneName);
-           playerDAO.save(playerOne);
-       }
+        if (playerOneOpt.isPresent()) {
+            playerOne = playerOneOpt.get();
+        } else {
+            playerOne = new Player(playerOneName);
+            playerDAO.save(playerOne);
+        }
 
         if (playerTwoOpt.isPresent()) {
             playerTwo = playerTwoOpt.get();
@@ -32,7 +32,7 @@ public class NewMatchService {
             playerDAO.save(playerTwo);
         }
 
-        return new Match(playerOne,playerTwo);
+        return new Match(playerOne, playerTwo);
     }
 
 }

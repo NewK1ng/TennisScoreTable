@@ -3,9 +3,9 @@ package model;
 
 public class MatchScore {
 
-    private int[] points;
-    private int[] games;
-    private int[] sets;
+    private final int[] points;
+    private final int[] games;
+    private final int[] sets;
     private boolean isEqualPoints;
     private boolean isTieBrake;
     private boolean isMatchFinished;

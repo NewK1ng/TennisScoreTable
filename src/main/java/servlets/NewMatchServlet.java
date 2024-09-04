@@ -1,6 +1,7 @@
 package servlets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.ServletConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -11,6 +12,7 @@ import model.Match;
 import model.Player;
 import service.OngoingMatchesService;
 import service.NewMatchService;
+import util.ErrorHandler;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -18,11 +20,12 @@ import java.util.UUID;
 @WebServlet(urlPatterns = "/new-match")
 public class NewMatchServlet extends HttpServlet {
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private ErrorHandler errorHandler;
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+    public void init(ServletConfig config) throws ServletException {
+        ObjectMapper mapper = new ObjectMapper();
+        errorHandler = new ErrorHandler(mapper);
     }
 
     @Override
@@ -32,15 +35,13 @@ public class NewMatchServlet extends HttpServlet {
         String playerTwoName = req.getParameter("player2");
 
         if (playerOneName == null || playerOneName.isBlank()) {
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            mapper.writeValue(resp.getWriter(), new ErrorResponse(HttpServletResponse.SC_BAD_REQUEST,
+            errorHandler.handleError(resp, new ErrorResponse(HttpServletResponse.SC_BAD_REQUEST,
                     "Wrong value for Player 1"));
             return;
         }
 
         if (playerTwoName == null || playerTwoName.isBlank()) {
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            mapper.writeValue(resp.getWriter(), new ErrorResponse(HttpServletResponse.SC_BAD_REQUEST,
+            errorHandler.handleError(resp, new ErrorResponse(HttpServletResponse.SC_BAD_REQUEST,
                     "Wrong value for Player 2"));
             return;
         }
@@ -48,17 +49,17 @@ public class NewMatchServlet extends HttpServlet {
         Match match;
 
         try {
-            match = new NewMatchService().createNewMatch(playerOneName,playerTwoName);
+            match = new NewMatchService().createNewMatch(playerOneName, playerTwoName);
         } catch (Exception e) {
-            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            mapper.writeValue(resp.getWriter(), new ErrorResponse(HttpServletResponse.SC_NOT_FOUND,
-                    e.getMessage()));
+            errorHandler.handleError(resp, new ErrorResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage()));
             return;
         }
 
         UUID uuid = OngoingMatchesService.addMatch(match);
 
-        resp.sendRedirect("/match-score?uuid="+uuid);
+        resp.sendRedirect("/match-score?uuid=" + uuid);
+
+
     }
 
 

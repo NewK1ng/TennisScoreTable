@@ -24,11 +24,20 @@ public class OngoingMatchesService {
         return uuid;
     }
 
-    public static Match getMatch(UUID id) {
-        return ongoingMatches.get(id);
+    public static Match getMatch(UUID id) throws Exception {
+        Match match = ongoingMatches.get(id);
+
+        if (match == null) {
+            throw new Exception("Match with uuid - " + id + " was not found");
+        } else return match;
+
     }
 
-    public static void removeMatch(UUID id) {
-        ongoingMatches.remove(id);
+    public static void removeMatch(UUID id) throws Exception {
+        Match removedMatch = ongoingMatches.remove(id);
+
+        if (removedMatch == null) {
+            throw new Exception("Match with uuid - " + id + " was not found and cannot be removed");
+        }
     }
 }

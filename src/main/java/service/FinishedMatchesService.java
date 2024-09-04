@@ -15,7 +15,6 @@ public class FinishedMatchesService {
     }
 
     public FinishedMatchesPage getFinishedMatches(int pageNumber, int pageSize, String playerName) throws Exception {
-
         int offset = (pageNumber - 1) * pageSize;
         int pageElementStartIndex = (pageSize * pageNumber) - pageSize;
         long numberOfMatches;

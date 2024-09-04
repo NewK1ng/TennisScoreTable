@@ -15,6 +15,7 @@ public class MatchDAO {
             session.persist(match);
 
             session.getTransaction().commit();
+
         } catch (Exception e) {
             throw new Exception("Something went wrong with saving match to the DB");
         }
@@ -93,6 +94,4 @@ public class MatchDAO {
             throw new Exception("Something went wrong when getting matches");
         }
     }
-
-
 }
