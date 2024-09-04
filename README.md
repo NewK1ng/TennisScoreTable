@@ -5,7 +5,7 @@ Created according to the technical specifications presented in [this course](htt
 
 ## Overview
 
-A website that provides a tennis match scoreboard. Allows you to create new match, view completed matches, search for matches by player name and enter points for the current match.
+A web application that provides a tennis match scoreboard. Allows you to create new match, view completed matches, search for matches by player name and enter points for the current match.
 
 ## Technologies / tools used
 
